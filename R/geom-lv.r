@@ -48,12 +48,12 @@
 #' @examples
 #' library(ggplot2)
 #' p <- ggplot(mpg, aes(class, hwy))
-#' p + geom_lv(aes(fill=..LV..)) + scale_fill_brewer()
+#' p + geom_lv(aes(fill = after_stat(LV))) + scale_fill_brewer()
 #' p + geom_lv() + geom_jitter(width = 0.2)
-#' p + geom_lv(alpha=1, aes(fill=..LV..)) + scale_fill_lv()
+#' p + geom_lv(aes(fill = after_stat(LV))) + scale_fill_lv()
 #'
 #' # Outliers
-#' p + geom_lv(varwidth = TRUE, aes(fill=..LV..)) + scale_fill_lv()
+#' p + geom_lv(varwidth = TRUE, aes(fill = after_stat(LV))) + scale_fill_lv()
 #' p + geom_lv(fill = "grey80", colour = "black")
 #' p + geom_lv(outlier.colour = "red", outlier.shape = 1)
 #'
@@ -62,14 +62,14 @@
 #'
 #' # varwidth adjusts the width of the boxes according to the number of observations
 #' ggplot(ontime, aes(UniqueCarrier, TaxiIn + TaxiOut)) +
-#'   geom_lv(aes(fill = ..LV..), varwidth=TRUE) +
+#'   geom_lv(aes(fill = after_stat(LV)), varwidth=TRUE) +
 #'   scale_fill_lv() +
 #'   scale_y_sqrt() +
 #'   theme_bw()
 #'
 #' ontime$DayOfWeek <- as.POSIXlt(ontime$FlightDate)$wday
 #' ggplot(ontime, aes(factor(DayOfWeek), TaxiIn + TaxiOut)) +
-#'   geom_lv(aes(fill = ..LV..)) +
+#'   geom_lv(aes(fill = after_stat(LV))) +
 #'   scale_fill_lv() +
 #'   scale_y_sqrt() +
 #'   theme_bw()
@@ -140,13 +140,13 @@ GeomLv <- ggplot2::ggproto("GeomLv", ggplot2::Geom,
                         outlier.size = 1.5, outlier.stroke = 0.5,
                         width.method="linear",
                         varwidth = FALSE) {
-    common <- data.frame(
+    common <- tibble(
       colour = data$colour,
       size = data$size,
+      linewidth = data$linewidth,
       linetype = data$linetype,
-      fill = alpha(data$fill, data$alpha),
+      fill = ggplot2::alpha(data$fill, data$alpha),
       group = data$group,
-      stringsAsFactors = FALSE
     )
 
     i <- seq_len(data$k[1]-1)-1
@@ -175,7 +175,7 @@ GeomLv <- ggplot2::ggproto("GeomLv", ggplot2::Geom,
     }
     # boxes for lower letter values
     # bottom rectangles:
-    lowbox <- data.frame(
+    lowbox <- tibble(
       xmin = data$xmin[lower] + offset[lower],
       xmax = data$xmax[lower] - offset[lower],
       ymin = data$lower[lower-1],
@@ -183,7 +183,6 @@ GeomLv <- ggplot2::ggproto("GeomLv", ggplot2::Geom,
       alpha = data$alpha[lower],
       LV = data$LV[lower],
       common[lower,],
-      stringsAsFactors = FALSE
     )
 
     if (width.method == "area") {
@@ -192,7 +191,7 @@ GeomLv <- ggplot2::ggproto("GeomLv", ggplot2::Geom,
     }
 
     # top rectangles:
-    hibox <- data.frame(
+    hibox <- tibble(
       xmin = data$xmin[upper] + offset[upper],
       xmax = data$xmax[upper] - offset[upper],
       ymin = data$upper[upper-1],
@@ -200,10 +199,9 @@ GeomLv <- ggplot2::ggproto("GeomLv", ggplot2::Geom,
       alpha = data$alpha[upper],
       LV = data$LV[upper],
       common[upper,],
-      stringsAsFactors = FALSE
     )
     # medians, not rectangles:
-    medians <- data.frame(
+    medians <- tibble(
       xmin = data$xmin[1],
       xmax = data$xmax[1],
       ymin = data$upper[1],
@@ -211,7 +209,6 @@ GeomLv <- ggplot2::ggproto("GeomLv", ggplot2::Geom,
       alpha = data$alpha[1],
       LV = data$LV[1],
       common[1,],
-      stringsAsFactors = FALSE
     )
     box <- rbind(medians, lowbox, hibox)
 #browser()
@@ -225,16 +222,15 @@ GeomLv <- ggplot2::ggproto("GeomLv", ggplot2::Geom,
       )
 
     if (!is.null(data$outliers) && length(data$outliers[[1]] >= 1)) {
-      outliers <- data.frame(
+      outliers <- tibble(
         y = data$outliers[[1]],
-        x = data$x[1],
+        x = data$x[[1]],
         colour = outlier.colour %||% data$colour[1],
         shape = outlier.shape %||% data$shape[1],
         size = outlier.size %||% data$size[1],
         stroke = outlier.stroke %||% data$stroke[1],
         fill = NA,
         alpha = NA,
-        stringsAsFactors = FALSE
       )
       outliers_grob <- GeomPoint$draw_panel(outliers, panel_scales, coord)
     } else {
@@ -250,8 +246,8 @@ GeomLv <- ggplot2::ggproto("GeomLv", ggplot2::Geom,
 
   draw_key = ggplot2::draw_key_rect,
 
-  default_aes = ggplot2::aes(weight = 1, colour = "grey70", fill = "grey70", size = 0.5,
-    alpha = 1, shape = 19, linetype = "solid", outlier.colour = "black",
+  default_aes = ggplot2::aes(weight = 1, colour = "grey50", fill = "grey80", size = 0.5,
+    alpha = 1, shape = 19, linewidth = 0.5, linetype = "solid", outlier.colour = "black",
     outlier.shape = 19, outlier.size = 1.5, outlier.stroke = 0.5),
 
   required_aes = c("x", "k", "LV")
