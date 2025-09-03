@@ -1,11 +1,11 @@
-ae9f037a1c021e481d77804734dee371 *DESCRIPTION
-e9a39301120fb153addbf73c4e39623e *NAMESPACE
-f50931ef4ee88e1c3b6a383d30029c47 *NEWS.md
+95cd0aea11d75a924a0302e829087b0b *DESCRIPTION
+6d4a70d989fb1ea65ed79b7ae98f33ae *NAMESPACE
+92aaff51d85cf6a73f1812d61f1f1bd5 *NEWS.md
 a6a99c808f347aa5b0adaf927a0f7da8 *R/calculate.r
 fe6705c29b4b8a7073adf3bf06c4bc17 *R/data.r
 4fcd0a9a927694232e2ebd90476d92a2 *R/draw.r
-db5c906cd8e3c015912e5a6978e14c2b *R/geom-lv.r
-5c259596fb9bef6cf94b92134fc5f657 *R/lvbagplot.R
+e094f2eeab9120c340cc5718695d552b *R/geom-lv.r
+37fabd81465fcad82fb73b3d15dcaf61 *R/lvbagplot.R
 02f96b408a75410f54dedc454548a9b2 *R/lvplot-package.R
 2f8fb78425a6823a587113480f32388a *R/lvplot.r
 7f39768ef649a214259cdfc224f2d377 *R/stat-lv.r
@@ -16,7 +16,7 @@ ecf3a747b8202b1746fd981f7e6a94d1 *README.md
 a9b4b0e54a1491eefd7a0c2bf79aa478 *man/census.Rd
 a04b4f1919bda6b9953eeb4b4d1f26af *man/determineDepth.Rd
 2879d28e1adbe634c705c8368b1a3219 *man/drawLVplot.Rd
-d8b9562c0a31f44ec7f35861771782cc *man/geom_lv.Rd
-1401a9221d1af16a9f847beb17c6005b *man/lvplot-package.Rd
+400163299507be17dc392b87efdbaf35 *man/geom_lv.Rd
+fc0485262e0dc26d82d2582360b6b9ca *man/lvplot-package.Rd
 d6bab745941a4e98cdaa7970688e3cbd *man/lvtable.Rd
 53e5d903cba5063ac4259c887dc2e109 *man/ontime.Rd
